@@ -28,7 +28,7 @@ type TableProps = {
 
 function Table(props: TableProps) {
   const { customers, handleDelete, handleEdit } = props;
-  const rowsPerPage = 10;
+  const rowsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
 
   const startIndex = (currentPage - 1) * rowsPerPage;
