@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   Table as TableComponent,
   Thead,
@@ -17,13 +18,31 @@ import {
   AiOutlineDelete,
   AiOutlineEdit,
 } from "react-icons/ai";
+import TablePagination from "../TablePagination/TablePagination";
 
 type TableProps = {
   customers: ICustomer[];
+  handleDelete: (customer: ICustomer) => void;
+  handleEdit: (customer: ICustomer) => void;
 };
 
 function Table(props: TableProps) {
-  const { customers } = props;
+  const { customers, handleDelete, handleEdit } = props;
+  const rowsPerPage = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const endIndex = currentPage * rowsPerPage;
+  const displayItems = customers.slice(startIndex, endIndex);
+
+  const totalPages = Math.ceil(customers.length / rowsPerPage);
+  
+  const handlePaginate = (novaPagina: number) => {
+    if (novaPagina > 0 && novaPagina <= totalPages) {
+      setCurrentPage(novaPagina);
+    }
+  };
+
 
   function NumberFormatter(price: number | string) {
     return price.toLocaleString("pt-BR", {
@@ -37,8 +56,8 @@ function Table(props: TableProps) {
   }
 
   return (
-    <TableContainer w="full" boxShadow='base' rounded='md' bg="white">
-      <TableComponent variant="simple" >
+    <TableContainer w="full" boxShadow="base" rounded="md" bg="white">
+      <TableComponent variant="simple">
         <Thead bg="gray.50">
           <Tr>
             <Th textAlign="center">Nome</Th>
@@ -49,27 +68,43 @@ function Table(props: TableProps) {
           </Tr>
         </Thead>
         <Tbody>
-          {customers.map((item: ICustomer) => (
-            <Tr key={`item_${item._id}`}>
-              <Td textAlign="center">{item.name}</Td>
-              <Td textAlign="center">{item.email}</Td>
-              <Td textAlign="center">R$ {NumberFormatter(item.price)}</Td>
-              <Td textAlign="center" color={item.payment ? "green.400" : "red.400"} fontSize="xl">
-                {item.payment ? (
+          {displayItems.map((customer: ICustomer) => (
+            <Tr key={`item_${customer._id}`}>
+              <Td textAlign="center">{customer.name}</Td>
+              <Td textAlign="center">{customer.email}</Td>
+              <Td textAlign="center">R$ {NumberFormatter(customer.price)}</Td>
+              <Td
+                textAlign="center"
+                color={customer.payment ? "green.400" : "red.400"}
+                fontSize="xl"
+              >
+                {customer.payment ? (
                   <AiOutlineCheckCircle />
                 ) : (
                   <AiOutlineCloseCircle />
                 )}
               </Td>
               <Td textAlign="center">
-                <Tooltip label="Editar" >
-                  <Button colorScheme="blue" variant="ghost" fontSize="xl" color="blue.400">
+                <Tooltip label="Editar">
+                  <Button
+                    onClick={() => handleEdit(customer)}
+                    colorScheme="blue"
+                    variant="ghost"
+                    fontSize="xl"
+                    color="blue.400"
+                  >
                     <AiOutlineEdit />
                   </Button>
                 </Tooltip>
 
                 <Tooltip label="Deletar">
-                  <Button colorScheme="red" variant="ghost" fontSize="xl" color="red.400">
+                  <Button
+                    onClick={() => handleDelete(customer)}
+                    colorScheme="red"
+                    variant="ghost"
+                    fontSize="xl"
+                    color="red.400"
+                  >
                     <AiOutlineDelete />
                   </Button>
                 </Tooltip>
@@ -78,6 +113,12 @@ function Table(props: TableProps) {
           ))}
         </Tbody>
       </TableComponent>
+
+      <TablePagination
+        currentPage={currentPage}
+        onPageChange={(page) => handlePaginate(page)}
+        totalPages={totalPages}
+      />
     </TableContainer>
   );
 }

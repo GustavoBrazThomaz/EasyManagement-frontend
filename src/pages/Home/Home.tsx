@@ -4,6 +4,8 @@ import Table from "../../components/Table/Table";
 import { ICustomer, getCustomers } from "./repository/Customer";
 import { useCustomerStore } from "../../store/CustomerStore";
 import CreateCustomerModal from "../../components/CreateModal/CreateCustomerModal";
+import DeleteCustomerModal from "../../components/DeleteModal/DeleteCustomerModal";
+import EditCustomerModal from "../../components/EditModal/EditCustomerModal";
 
 function Home() {
   const [customers, setCustomers] = useState<ICustomer[]>([]);
@@ -11,8 +13,7 @@ function Home() {
     open_create,
     open_delete,
     open_edit,
-    customer_edit,
-    setCustomerToEdit,
+    setCustomer,
     toggleOpenCreate,
     toggleOpenDelete,
     toggleOpenEdit,
@@ -32,6 +33,16 @@ function Home() {
     getAllCustomers();
   }, [refresh]);
 
+  function openDeleteCustomer(customer: ICustomer){
+    setCustomer(customer)
+    toggleOpenDelete()
+  }
+
+  function openEditCustomer(customer: ICustomer){
+    setCustomer(customer)
+    toggleOpenEdit()
+  }
+
   return (
     <Flex justify="center" align="center" flexDirection="column" maxW="container.md" h="100vh">
 
@@ -39,8 +50,10 @@ function Home() {
         <Button colorScheme="blue" boxShadow='base' rounded='md' onClick={toggleOpenCreate}>Criar Cliente</Button>
       </Flex>
 
-      <Table customers={customers} />
+      <Table customers={customers} handleDelete={openDeleteCustomer} handleEdit={openEditCustomer}/>
       <CreateCustomerModal open={open_create} />
+      <DeleteCustomerModal open={open_delete}/>
+      <EditCustomerModal open={open_edit}/>
     </Flex>
   );
 }

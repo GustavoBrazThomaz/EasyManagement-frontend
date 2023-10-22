@@ -22,3 +22,22 @@ export async function postCustomer(customer: ICustomer) {
     throw new Error("Erro ao criar cliente");
   }
 }
+
+
+export async function deleteCustomer(id: string){
+  try {
+    const response = await API.delete(`/customer/${id}`);
+    return response;
+  } catch {
+    throw new Error("Erro ao deletar cliente");
+  }
+}
+
+export async function putCustomer(customer: ICustomer){
+  try{
+    const response = await API.put(`/customer/${customer._id}`, customer)
+    return response
+  }catch {
+    throw new Error("Erro ao editar cliente");
+  }
+}
