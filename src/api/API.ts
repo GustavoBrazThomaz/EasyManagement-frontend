@@ -1,5 +1,5 @@
 import axios from "axios";
 
 export const API = axios.create({
-    baseURL: "https://pot-cake-backend.vercel.app/api",  
+    baseURL: "https://easy-management-backend.vercel.app/api",  
 })
