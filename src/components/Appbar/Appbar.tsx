@@ -12,7 +12,7 @@ function Appbar() {
       color="white"
     >
       <Text ml={8} as="b" fontSize="2xl">
-        GestãoFácil
+        J.I.S 
       </Text>
 
       <Text>
